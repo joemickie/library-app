@@ -4,8 +4,21 @@ import firestore from '../firebase';
 const BorrowButton = ({ book }) => {
   const borrowBook = () => {
     if (book.stock > 0) {
-      firestore.collection('books').doc(book.id).update({ stock: book.stock - 1 });
-      firestore.collection('borrowedBooks').add({ title: book.title, borrower: 'John Doe' });
+      // Update stock of the book
+      firestore.collection('books').doc(book.id).update({ stock: book.stock - 1 })
+      .then(() => {
+        // Add the borrowed book to borrowedBooks collection
+        firestore.collection('borrowedBooks').add({ title: book.title, borrower: 'John Doe' })
+        .then(() => {
+          console.log('Book borrowed successfully');
+        })
+        .catch(error => {
+          console.error('Error borrowing book:', error);
+        });
+      })
+      .catch(error => {
+        console.error('Error updating stock:', error);
+      });
     } else {
       alert('Book out of stock');
     }

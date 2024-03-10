@@ -20,6 +20,8 @@ const BorrowedBooks = () => {
         <div key={book.id} className="bg-white p-4 rounded-lg shadow-lg mb-4">
           <h3 className="text-lg font-bold mb-2">{book.title}</h3>
           <p className="text-gray-700">Borrower: {book.borrower}</p>
+          {/* Assuming you also want to display return date */}
+          <p className="text-gray-700">Return Date: {book.returnDate}</p>
         </div>
       ))}
     </div>

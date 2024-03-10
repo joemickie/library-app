@@ -1,5 +1,6 @@
 import React from 'react';
 import BorrowButton from './BorrowButton';
+import ReturnButton from './ReturnButton'; // Assuming you have a ReturnButton component
 
 const Book = ({ book }) => {
   return (
@@ -8,7 +9,7 @@ const Book = ({ book }) => {
       <p className="text-gray-700">Author: {book.author}</p>
       <p className="text-gray-700">Genre: {book.genre}</p>
       <p className="text-gray-700">Stock: {book.stock}</p>
-      <BorrowButton book={book} />
+      {book.stock > 0 ? <BorrowButton book={book} /> : <ReturnButton bookId={book.id} />}
     </div>
   );
 };

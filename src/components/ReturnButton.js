@@ -1,14 +1,29 @@
 import React from 'react';
 import firestore from '../firebase';
 
-const ReturnButton = ({ borrowedBookId }) => {
-  const returnBook = () => {
-    firestore.collection('borrowedBooks').doc(borrowedBookId).delete();
-    // Update the stock of the book when it's returned
-    // Assuming you have a field in the borrowed book document to store the book ID
-    // Retrieve the book ID and update its stock
-    // Example:
-    // firestore.collection('books').doc(bookId).update({ stock: updatedStock });
+const ReturnButton = ({ borrowedBookId, bookId }) => {
+  const returnBook = async () => {
+    try {
+      // Delete the borrowed book document
+      await firestore.collection('borrowedBooks').doc(borrowedBookId).delete();
+      
+      // Retrieve the book document to update its stock
+      const bookRef = firestore.collection('books').doc(bookId);
+      const bookSnapshot = await bookRef.get();
+      
+      // Get current stock
+      const currentStock = bookSnapshot.data().stock;
+      
+      // Update the stock (increment by 1 for return)
+      const updatedStock = currentStock + 1;
+      
+      // Update the stock in the book document
+      await bookRef.update({ stock: updatedStock });
+      
+      console.log('Book returned successfully!');
+    } catch (error) {
+      console.error('Error returning book:', error);
+    }
   };
 
   return (
@@ -19,3 +34,4 @@ const ReturnButton = ({ borrowedBookId }) => {
 };
 
 export default ReturnButton;
+
